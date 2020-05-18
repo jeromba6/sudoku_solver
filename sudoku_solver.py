@@ -31,15 +31,25 @@ sudoku='''800000000
 008500010
 090000400'''
 
-sudoku='''001058060
-800016050
-520700100
-000001023
-082060410
-600900000
-008007500
-040600002
-050120800'''
+# sudoku='''001058060
+# 800016050
+# 520700100
+# 000001023
+# 082060410
+# 600900000
+# 008007500
+# 040600002
+# 050120800'''
+
+# sudoku='''005073060
+# 040960000
+# 000000240
+# 000030400
+# 000080001
+# 000210530
+# 400000003
+# 056000009
+# 908700000'''
 
 
 def read_sudoku(input):
@@ -58,13 +68,13 @@ def options_row_colum_block(input):
 
 def valid_values(x,y,input):
     if input[x][y] == '0':
-        bx = int(x / 3)
-        by = int(y / 3)
+        bx = x // 3
+        by = y // 3
         valid="123456789"
         for i in range(9):
             valid=valid.replace(input[i][y], '')
             valid=valid.replace(input[x][i], '')
-            cx = bx * 3 + int(i / 3)
+            cx = bx * 3 + (i // 3)
             cy = by * 3 + (i % 3)
             valid=valid.replace(input[cx][cy],'')
     else:
@@ -88,14 +98,14 @@ def print_step(sudoku, options):
 def block_single_valid(options):
     for b in range(9):
         bx = (b % 3) * 3
-        by = int(b / 3) * 3
+        by = (b // 3) * 3
         for c in range(8):
             cx = c % 3
-            cy = int(c / 3)
+            cy = c // 3
             lval = [c]
             for cc in range(c + 1,9):
                 ccx = cc % 3
-                ccy = int(cc / 3)
+                ccy = cc // 3
                 if options[bx + cx][by + cy] == options[bx + ccx][by + ccy]:
                     lval.append(cc)
             if len(options[bx + cx][by + cy]) == len(lval):
@@ -103,20 +113,20 @@ def block_single_valid(options):
                     if not cc in lval:
                         for rem_val in options[bx + cx][by + cy]:
                             ccx = cc % 3
-                            ccy = int(cc / 3)
+                            ccy = cc // 3
                             options[bx + ccx][by + ccy] = options[bx + ccx][by + ccy].replace(rem_val,'')
     for b in range(9):
         bx = b % 3
-        by = int(b / 3)
+        by = b // 3
         for c in range(9):
             x = bx * 3 + c % 3
-            y = by * 3 + int(c / 3)
+            y = by * 3 + (c // 3)
             if len(options[x][y]) > 1:
                 for val in options[x][y]:
                     single_valid = True
                     for cc in range(9):
                         cx = bx * 3 + cc % 3
-                        cy = by * 3 + int(cc / 3)
+                        cy = by * 3 + (cc // 3)
                         if x != cx or y != cy:
                             if val in options[cx][cy]:
                                 single_valid =  False
@@ -129,7 +139,7 @@ def block_single_valid(options):
 def block_row_col(options):
     for b in range(9):
         bx = b % 3
-        by = int(b / 3)
+        by = b // 3
         for val in range(1,10):
             valy=[]
             for y in range(3):
@@ -195,7 +205,7 @@ while continue_loop:
     if len(guess) != 0:
         for I in range(81):
             x = I % 9
-            y = int(I / 9)
+            y = I // 9
             if len(sudoku_options[x][y]) == 0:
                 print()
                 restart = True
@@ -219,7 +229,7 @@ while continue_loop:
         for i in range(2,9):
             for j in range(81):
                 x = j % 9
-                y = int(j / 9)
+                y = j // 9
 
                 # Find first avalible cell with least options
                 if len(sudoku_options[x][y]) == i:
@@ -254,7 +264,7 @@ while continue_loop:
 
     for i in range(81):
         x = i % 9
-        y = int(i / 9)
+        y = i // 9
         if sudoku_step1[x][y] == '0':
             break
         if i == 80:
